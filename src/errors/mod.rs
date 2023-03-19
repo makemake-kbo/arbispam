@@ -8,5 +8,6 @@ pub mod errors {
         println!("2) Claim address");
         println!("3) Token address");
         println!("4) HTTP RPC");
+        println!("5) Address to recieve");
     }
 }

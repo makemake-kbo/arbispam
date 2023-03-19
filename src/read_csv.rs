@@ -14,7 +14,7 @@ where
 // Reads CSV ant outputs a Vec<string> of SKs
 // Takes in path to CSV as an argument
 #[allow(dead_code)]
-pub fn read_csv(path: &str) -> Vec<String> {
+pub fn read_csv_from_path(path: &str) -> Vec<String> {
     let mut sks: Vec<String> = Vec::new();
     if let Ok(lines) = read_lines(path) {
         for line in lines {

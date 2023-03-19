@@ -1,6 +1,10 @@
+use std::str::FromStr;
+use ethers_contract::abigen;
 use ethers::providers::{Http, Provider};
 use ethers::prelude::*;
-use std::convert::TryFrom;
+use std::{sync::Arc};
+
+type Client = SignerMiddleware<Provider<Http>, Wallet<k256::ecdsa::SigningKey>>;
 
 abigen!(
     Claim,
@@ -9,52 +13,51 @@ abigen!(
 
 abigen!(
     ERC20,
-    r#"[function transfer(address to, uint256 amount) external returns (bool)]"#
+    r#"[
+        function transfer(address, uint256) external
+        function balanceOf(address) external
+        ]"#,
+    event_derives(serde::Deserialize, serde::Serialize)
 );
 
 // Tokio async function that takes in the provider and private key as a string and sends transaction to contract with a function claim with no arguments
-#[tokio::main]
-async fn send_claim_transaction(provider: Provider<Http>, sk: String, nonce: u32, _contract_address: String) -> Result<(), Box<dyn std::error::Error>> {
-    let wallet = LocalWallet::new(&sk, Some(provider));
+pub async fn send_claim_transaction(wallet: LocalWallet, provider: Provider<Http>, sk: String, _contract_address: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let client = SignerMiddleware::new(provider.clone(), wallet.clone());
 
     // Address of the contract
     let contract_address = Address::from_str(_contract_address).unwrap();
 
-    // ABI of the contract, if the abi points to an
-    let contract_abi = include_bytes!("./abi/claim.json")?;
-
     // Create an instance of the contract using the provider and ABI
-    let contract = Claim::new(contract_address, wallet.clone());
+    let contract = Claim::new(contract_address.clone(), Arc::new(client));
 
     // Call the `claim` function on the contract
-    let tx = contract.claim().send().await?;
+    contract.claim().send().await?;
 
-    println!("Claim transaction sent! Hash: {:?}", tx.hash);
+    println!("Claim transaction sent!");
 
     Ok(())
 }
 
 // Tokio async function that takes in the provider and private key as a string and sends transaction to contract to transfer claim
-#[tokio::main]
-async fn send_transfer_transaction(provider: Provider<Http>, sk: String, nonce: u32, _contract_address: String, receiver_address: String) -> Result<(), Box<dyn std::error::Error>> {
-    let wallet = LocalWallet::new(&sk, Some(provider));
+pub async fn send_transfer_transaction(wallet: LocalWallet, provider: Provider<Http>, sk: String, _contract_address: &str, receiver_address: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let client = SignerMiddleware::new(provider.clone(), wallet.clone());
 
     // Address of the contract
     let contract_address = Address::from_str(_contract_address).unwrap();
 
-    // ABI of the contract, if the abi points to an
-    let contract_abi = include_bytes!("./abi/erc20.json")?;
-
     // Create an instance of the contract using the provider and ABI
-    let contract = ERC20::new(contract_address, wallet.clone());
+    let contract = ERC20::new(contract_address.clone(), Arc::new(client));
 
     // Get balance of address
-    let balance = contract.balance_of().call(wallet.address()).await?;
+    let balance = contract.balance_of(wallet.address()).call().await?;
+
+    // Convert receiver address to String
+    let receiver_address = Address::from_str(receiver_address).unwrap();
 
     // Call the `claim` function on the contract
-    let tx = contract.transfer(receiver_address.unwrap(), balance).send().await?;
+    contract.transfer(receiver_address, balance).send().await?;
 
-    println!("Send transaction sent! Hash: {:?}", tx.hash);
+    println!("Send transaction sent!");
 
     Ok(())
 }
