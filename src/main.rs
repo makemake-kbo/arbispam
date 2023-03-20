@@ -28,6 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // Vec<String> of private keys loaded from csv
         let private_keys = read_csv_from_path(&args[1]);
+        println!("Private keys loaded: {:?}", &private_keys.len());
 
         let mut handles = Vec::new();
 
