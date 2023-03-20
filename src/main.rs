@@ -10,9 +10,10 @@ use std::env;
 
 use ethers::prelude::*;
 
+fn string_to_static_str(s: String) -> &'static str {
+    Box::leak(s.into_boxed_str())
+}
 
-
-#[allow(unused_variables)]
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
@@ -31,12 +32,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         for sk in private_keys {
             let provider_clone = provider.clone();
-            let sk_clone = sk.clone();
             let wallet: LocalWallet = sk.parse::<LocalWallet>()?;
-            let handle = tokio::spawn(async move {
+            let claim_contract_clone = string_to_static_str(claim_contract.clone());
+            let token_contract_clone = string_to_static_str(token_contract.clone());
+            let receiver_address_clone = string_to_static_str(receiver_address.clone());
 
-                send_claim_transaction(wallet, provider_clone, sk_clone, claim_contract).await;
-                send_transfer_transaction(wallet, provider_clone, sk_clone, token_contract, receiver_address)
+            let handle = tokio::spawn(async move {
+                send_claim_transaction(wallet.clone(), provider_clone.clone(), claim_contract_clone.clone()).await.ok();
+                send_transfer_transaction(wallet, provider_clone, token_contract_clone, receiver_address_clone).await.ok();
             });
             handles.push(handle);
         }

@@ -4,8 +4,6 @@ use ethers::providers::{Http, Provider};
 use ethers::prelude::*;
 use std::{sync::Arc};
 
-type Client = SignerMiddleware<Provider<Http>, Wallet<k256::ecdsa::SigningKey>>;
-
 abigen!(
     Claim,
     r#"[function claim() external]"#
