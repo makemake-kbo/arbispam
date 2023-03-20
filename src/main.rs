@@ -18,12 +18,12 @@ fn string_to_static_str(s: String) -> &'static str {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     if args.len() == 6 {
-        let claim_contract: &String = &args[1];
-        let token_contract: &String = &args[2];
-        let receiver_address: &String = &args[4];
+        let claim_contract: &String = &args[2];
+        let token_contract: &String = &args[3];
+        let receiver_address: &String = &args[5];
 
         // Get provider
-        let provider = Provider::<Http>::try_from(&args[3])?;
+        let provider = Provider::<Http>::try_from(&args[4])?;
 
         // Vec<String> of private keys loaded from csv
         let private_keys = read_csv_from_path(&args[1]);
