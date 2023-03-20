@@ -17,10 +17,11 @@ fn string_to_static_str(s: String) -> &'static str {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
-    if args.len() == 6 {
+    if args.len() == 7 {
         let claim_contract: &String = &args[2];
         let token_contract: &String = &args[3];
         let receiver_address: &String = &args[5];
+        let chain_id: u64 = args[6].parse::<u64>().unwrap();
 
         // Get provider
         let provider = Provider::<Http>::try_from(&args[4])?;
@@ -32,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         for sk in private_keys.into_iter() {
             let provider_clone = provider.clone();
-            let wallet: LocalWallet = sk.parse::<LocalWallet>()?;
+            let wallet: LocalWallet = sk.parse::<LocalWallet>()?.with_chain_id(chain_id.clone());
             let claim_contract_clone = string_to_static_str(claim_contract.clone());
             let token_contract_clone = string_to_static_str(token_contract.clone());
             let receiver_address_clone = string_to_static_str(receiver_address.clone());
