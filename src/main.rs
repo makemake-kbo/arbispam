@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let mut handles = Vec::new();
 
-        for sk in private_keys {
+        for sk in private_keys.into_iter() {
             let provider_clone = provider.clone();
             let wallet: LocalWallet = sk.parse::<LocalWallet>()?;
             let claim_contract_clone = string_to_static_str(claim_contract.clone());
