@@ -9,5 +9,7 @@ pub mod errors {
         println!("3) Token address");
         println!("4) HTTP RPC");
         println!("5) Address to recieve");
+        println!("EXAMPLE:");
+        println!("cargo run --release ./privkeys.csv ${{CLAIM_ADDRESS}} ${{TOKEN_ADDRESS}} https://your-endpoint.com ${{YOUR_ADDRESS}}");
     }
 }
