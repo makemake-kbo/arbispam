@@ -32,6 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let mut handles = Vec::new();
 
+        // Iterate over private keys and send claim and transfer transactions
         for sk in private_keys.into_iter() {
             let provider_clone = provider.clone();
             let wallet: LocalWallet = sk.parse::<LocalWallet>()?.with_chain_id(chain_id.clone());
@@ -39,13 +40,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let token_contract_clone = token_contract.clone();
             let receiver_address_clone = receiver_address.clone();
 
+            // Spawn a task for each wallet
             let handle = tokio::spawn(async move {
-                send_claim_transaction(wallet.clone(), provider_clone.clone(), claim_contract_clone.clone()).await.ok();
+                send_claim_transaction(wallet.clone(), provider_clone.clone(), claim_contract_clone).await.ok();
                 send_transfer_transaction(wallet, provider_clone, token_contract_clone, receiver_address_clone).await.ok();
             });
+            // Add task to handles
             handles.push(handle);
         }
-
         futures::future::join_all(handles).await;
 
         Ok(())
