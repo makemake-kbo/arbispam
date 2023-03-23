@@ -20,6 +20,7 @@ pub fn read_csv_from_path(csv_file: &str) -> Vec<String> {
 
     for line in reader.lines() {
         let line = line.expect("Error reading line");
+        // Split line by comma and push to data vector
         let values: Vec<String> = line.split(',').map(|s| s.to_string()).collect();
         for val in values {
             data.push(val);

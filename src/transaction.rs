@@ -4,6 +4,7 @@ use ethers::providers::{Http, Provider};
 use ethers::prelude::*;
 use std::{sync::Arc};
 
+// Generate bindings for the claim and erc20 token contracts
 abigen!(
     Claim,
     r#"[function claim() external]"#
