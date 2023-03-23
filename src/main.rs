@@ -2,25 +2,25 @@ mod transaction;
 mod errors;
 mod read_csv;
 
-
+use crate::errors::print_help;
 use crate::read_csv::read_csv_from_path;
 use crate::transaction::*;
-use crate::errors::errors::print_help;
+
 use std::env;
 
 use ethers::prelude::*;
 
-fn string_to_static_str(s: String) -> &'static str {
-    Box::leak(s.into_boxed_str())
+fn string_to_str(s: &String) -> &'static str {
+    Box::leak(s.clone().into_boxed_str())
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     if args.len() == 7 {
-        let claim_contract: &String = &args[2];
-        let token_contract: &String = &args[3];
-        let receiver_address: &String = &args[5];
+        let claim_contract: &str = string_to_str(&args[2]);
+        let token_contract: &str = string_to_str(&args[3]);
+        let receiver_address: &str = string_to_str(&args[5]);
         let chain_id: u64 = args[6].parse::<u64>().unwrap();
 
         // Get provider
@@ -35,9 +35,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         for sk in private_keys.into_iter() {
             let provider_clone = provider.clone();
             let wallet: LocalWallet = sk.parse::<LocalWallet>()?.with_chain_id(chain_id.clone());
-            let claim_contract_clone = string_to_static_str(claim_contract.clone());
-            let token_contract_clone = string_to_static_str(token_contract.clone());
-            let receiver_address_clone = string_to_static_str(receiver_address.clone());
+            let claim_contract_clone = claim_contract.clone();
+            let token_contract_clone = token_contract.clone();
+            let receiver_address_clone = receiver_address.clone();
 
             let handle = tokio::spawn(async move {
                 send_claim_transaction(wallet.clone(), provider_clone.clone(), claim_contract_clone.clone()).await.ok();
