@@ -21,7 +21,20 @@ Example:
 
 ## Benchmarks
 
-<img width="835" alt="Screenshot 2023-03-23 at 20 31 02" src="https://user-images.githubusercontent.com/55022497/227328952-19195c6c-b385-4939-8dc0-72c6a7a02497.png">
+<blockquote
+ class="twitter-tweet"><p lang="en" 
+dir="ltr">cont.<br><br>wrote a bot that claims and 
+transfers the <a 
+href="https://twitter.com/search?q=%24ARB&amp;src=ctag&amp;ref_src=twsrc%5Etfw">$ARB</a>
+ airdrop<br><br>it claimed 190 addresses in 0.16 seconds on a
+ local node. rust concurrency is so much better than anything else out 
+there <a 
+href="https://t.co/xRz7RB0imy">https://t.co/xRz7RB0imy</a> 
+<a 
+href="https://t.co/2mtaE131eV">pic.twitter.com/2mtaE131eV</a></p>&mdash;
+ makemake ⛈️ (@makemake_kbo) <a 
+href="https://twitter.com/makemake_kbo/status/1638184776329732098?ref_src=twsrc%5Etfw">March
+ 21, 2023</a></blockquote>
 
 ## Disclaimer
 
