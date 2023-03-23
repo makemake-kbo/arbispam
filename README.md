@@ -21,9 +21,9 @@ Example:
 
 ## Benchmarks
 
-
+<img width="835" alt="Screenshot 2023-03-23 at 20 31 02" src="https://user-images.githubusercontent.com/55022497/227328952-19195c6c-b385-4939-8dc0-72c6a7a02497.png">
 
 ## Disclaimer
 
-This was tested and *should* work, see he licence for a warranty disclaimer(tldr; there is no warranty).  
+This was tested and *should* work, see the licence for a warranty disclaimer(tldr; there is no warranty).  
 
