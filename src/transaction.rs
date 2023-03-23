@@ -21,6 +21,7 @@ abigen!(
 
 // Tokio async function that takes in the provider and private key as a string and sends transaction to contract with a function claim with no arguments
 pub async fn send_claim_transaction(wallet: LocalWallet, provider: Provider<Http>, _contract_address: &str) -> Result<(), Box<dyn std::error::Error>> {
+    // Cba reading the docs to see what type this is so we just pass in `wallet`
     let client = SignerMiddleware::new(provider.clone(), wallet.clone());
 
     // Address of the contract
@@ -39,6 +40,7 @@ pub async fn send_claim_transaction(wallet: LocalWallet, provider: Provider<Http
 
 // Tokio async function that takes in the provider and private key as a string and sends transaction to contract to transfer claim
 pub async fn send_transfer_transaction(wallet: LocalWallet, provider: Provider<Http>, _contract_address: &str, receiver_address: &str) -> Result<(), Box<dyn std::error::Error>> {
+    // Cba reading the docs to see what type this is so we just pass in `wallet`
     let client = SignerMiddleware::new(provider.clone(), wallet.clone());
 
     // Address of the contract
